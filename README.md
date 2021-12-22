@@ -2,9 +2,7 @@
 
 ## Introduction
 
-This page (or manual) incorporate few option which Veracode customers can use to integrate Veracode Scanning solutions within their own workflow processes. 
-
-The following discussed concepts are valid for most CI solutions, however, the examples given here focus on GitHub workflow and unavoidably GitHub Actions implementations.
+This document describes how Veracode customers can integrate Veracode within their own CI workflow processes. While the concepts presented here are valid for most CI solutions,  the examples given here focus on GitHub workflow and GitHub Actions implementations.
 
 __Few general links to additional Veracode resource collections you may find useful:__
 - As always - use the [Veracode Help Center](https://www.help.veracode.com) when needed
