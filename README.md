@@ -4,27 +4,27 @@
 
 This document describes how Veracode customers can integrate Veracode within their own CI workflow processes. While the concepts presented here are valid for most CI solutions,  the examples given here focus on GitHub workflow and GitHub Actions implementations.
 
-__Few general links to additional Veracode resource collections you may find useful:__
-- As always - use the [Veracode Help Center](https://www.help.veracode.com) when needed
+__Some general links to additional Veracode resource collections you may find useful:__
+- As always - use the [Veracode Documentation](https://docs.veracode.com) when needed
 - [Veracode Community Projects](https://github.com/veracode/Veracode-Community-Projects)
 - [Veracode Official Docker Images](https://hub.docker.com/u/veracode)
-- [Veracode Actions in gitHub Marketplace](https://github.com/marketplace?type=&verification=&query=veracode)
+- [Veracode Actions in GitHub Marketplace](https://github.com/marketplace?type=&verification=&query=veracode)
 
-<hr/>
+---
 
-## __The basic__ - adding Veracode Security Scanning to workflow
+## __The basics__ - adding Veracode security scanning to a workflow
 
-As most integration options, here are few ways to introduce our different AST scanning options to a workflow.
+As with most integration options, there are a few ways to introduce our different AST scanning options to a workflow.
 
 
 ### Veracode Static Scanning - Upload and Scan 
 #### Script
 
-A basic script using a wrapper is documented __[at Veracode help center](https://help.veracode.com/r/r_uploadandscan)__ and looks as follow:   
+A basic script using a wrapper can be found __[in the Veracode docs](https://docs.veracode.com/r/r_uploadandscan)__ and goes as follow:   
 
 `java -jar vosp-api-wrapper-java<version>.jar -action uploadandscan -vid <Veracode API ID> -vkey <Veracode API key> -appname myapp -createprofile true -teams myteam -criticality VeryHigh -sandboxname sandboxA -createsandbox true -version <unique version> -scantimeout 30 -selectedpreviously true -filepath /workspace/myapp.jar`
 
-To use the above script within a GitHub workflow we will need to download the latest version of the API Wrapper and run the above script.
+To use the above script within a GitHub workflow, we will need to download the latest version of the API Wrapper and run the above script.
 <details>
 <summary>See example</summary>
 <p>
@@ -36,7 +36,7 @@ name: Veracode Static Scan
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ master, release/* ]
+    branches: [ master, main, release/* ]
   pull_request:
     branches: [ master, develop, main, release/* ]
 
@@ -72,7 +72,7 @@ jobs:
 > :grey_exclamation: The above is good to know, however, it is better to use one of the other options below
 
 #### Pre-built Docker Image
-Veracode released and maintain a set of public Docker Images which are available at __[DockerHub](https://hub.docker.com/u/veracode)__. One of these has the API Wrapper pre-packaged and does not requires the convoluted download script.
+Veracode releases and maintains a set of public Docker Images which are available at __[DockerHub](https://hub.docker.com/u/veracode)__. One of these has the API Wrapper pre-packaged and does not requires the convoluted download script.
 
 An example using the Docker image use can be found here:
 - [https://github.com/lerer-veracode/verademo-java/blob/test-policy-scan-using-docker/.github/workflows/upload-and-scan.yml](https://github.com/lerer-veracode/verademo-java/blob/test-policy-scan-using-docker/.github/workflows/upload-and-scan.yml)
@@ -86,9 +86,9 @@ name: Veracode Static Scan
 
 # Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
+  # Triggers the workflow on push or pull request events but only for the master/main branch
   push:
-    branches: [ master, release/* ]
+    branches: [ master, main, release/* ]
   pull_request:
     branches: [ master, develop, main, release/* ]
 
@@ -125,7 +125,7 @@ jobs:
 #### GitHub Action
 An easier way to incorporate the upload and scan into a workflow is using Veracode supported __[upload-and-scan GitHub action](https://github.com/marketplace/actions/veracode-upload-and-scan)__
 
-To write a workflow with the official action we can use the documentation in the action page
+To write a workflow with the official action we can use the documentation in the action page.
 <details>
 <summary>See example</summary>
 <p>
@@ -135,9 +135,9 @@ name: Veracode Static Scan
 
 # Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
+  # Triggers the workflow on push or pull request events but only for the master/main branch
   push:
-    branches: [ master, release/* ]
+    branches: [ master, main, release/* ]
   pull_request:
     branches: [ master, develop, main, release/* ]
 
@@ -180,7 +180,7 @@ jobs:
 </details>
 
 #### Align sandbox name with branch name (Optional)
-If you look into the above example, you'll noticed the sandbox name is a fixed name. A fixed sandbox name will not do well in the long run as we probably want to scan different changes/versions in a different sandboxes.
+If you look into the above example, you'll notice the sandbox name is a fixed name. A fixed sandbox name will not do well in the long run as we probably want to scan different changes/versions in a different sandboxes.
 
 An alternative to that is to align the sandbox name with the repository branch name. In order to achieve that we can modify the workflow definition to include a step prior to the scan to save the branch name as an attribute and use it when we submit for scan.
 
